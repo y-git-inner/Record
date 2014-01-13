@@ -1,191 +1,205 @@
-﻿/*  
+﻿/***********************************************
+ OOP框架YOOP    v1.0
 
-2012.10.23：
-实现面向对象的写法（抽象类、接口、私有、公有、静态）
+ 作者：YYC
+ 日期：2013-06-09
+ 电子邮箱：395976266@qq.com
+ QQ: 395976266
+ 博客：http://www.cnblogs.com/chaogex/
 
-2012.11.24：
-该框架的好处是用属性、方法之间可以用this互相调用。
 
-缺点就是外界可以访问到私有属性/方法、保护属性/方法。
+修改记录：
+ 2012.10.23：
+ 实现面向对象的写法（抽象类、接口、私有、公有、静态）
 
+ 2012.11.24：
+ 该框架的好处是用属性、方法之间可以用this互相调用。
 
+ 缺点就是外界可以访问到私有属性/方法、保护属性/方法。
 
 
 
-Private：私有属性/方法
-Public：公有属性/方法
-Protected: 保护属性/方法
-Virtual : 虚方法（公有虚方法）（虚方法可以不被重写，虚方法只能在Public或Protected中声明）
-Abstract: 抽象成员
-Static：静态属性/方法
 
-访问私有或公有属性/方法的方法：都用this来调用。
 
+ Private：私有属性/方法
+ Public：公有属性/方法
+ Protected: 保护属性/方法
+ Virtual : 虚方法（公有虚方法）（虚方法可以不被重写，虚方法只能在Public或Protected中声明）
+ Abstract: 抽象成员
+ Static：静态属性/方法
 
-2012.12.04：
-//私有属性/方法以“_”开头，保护属性/方法以“P_”开头。
+ 访问私有或公有属性/方法的方法：都用this来调用。
 
 
+ 2012.12.04：
+ //私有属性/方法以“_”开头，保护属性/方法以“P_”开头。
 
-基类的私有成员以“_”开头，  //保护成员以“P_”开头，
-第一层子类私有成员以“__”开头，   //保护成员以“P__”开头，
-第二层子类私有成员以“___”开头，  //保护成员以“P___”开头，
-以此类推。。。。。。（接口不算。即如果类A实现接口I，则A的私有成员以“_”开头）
-这样做的目的是继承树上的各层类的私有成员互不干涉  //和保护成员互不干涉。
 
-注意：如果基类为接口，则接口不作为此处的基类（它的子类作为基类进行判断）；
-//如果基类为抽象类且该抽象类没有私有成员，则抽象类不作为此处的基类（它的子类作为基类进行判断），否则抽象类作为此处的基类（即私有成员以“_”开头）。
 
+ 基类的私有成员以“_”开头，  //保护成员以“P_”开头，
+ 第一层子类私有成员以“__”开头，   //保护成员以“P__”开头，
+ 第二层子类私有成员以“___”开头，  //保护成员以“P___”开头，
+ 以此类推。。。。。。（接口不算。即如果类A实现接口I，则A的私有成员以“_”开头）
+ 这样做的目的是继承树上的各层类的私有成员互不干涉  //和保护成员互不干涉。
 
+ 注意：如果基类为接口，则接口不作为此处的基类（它的子类作为基类进行判断）；
+ //如果基类为抽象类且该抽象类没有私有成员，则抽象类不作为此处的基类（它的子类作为基类进行判断），否则抽象类作为此处的基类（即私有成员以“_”开头）。
 
-父类中，不希望被子类重写的成员，放到Sealed中，
-如果公有成员被其它成员调用，且该公有成员不在Sealed中且不希望被子类多态，则使用纯虚原则先将其写成私有方法，再其它成员调用私有方法。
-如：
-Operate_Game.js Operate_Single类中的RefreshMapInfo、GameOver等公有成员。
 
-如果公有成员被其它成员调用，且该公有成员希望被子类多态（子类同名方法用this.base调用父类同名方法，父类同名方法又调用了该公有成员。
-该公有成员被子类覆盖了，所以父类同名方法实际上调用的是子类中与该公有成员同名的成员），则不做任何处理，其它成员直接调用该公有成员。
-如：
-Operate_Game.js Operate_Single类中AddTimeLine、Mousedown等。
 
-子类（Operate_Boss）的start方法中通过this.base（this.base的作用是将父类的同名方法指向子类）调用父类的start方法，
-父类的start方法又调用了公有成员AddTimeLine。而该AddTimeLine被子类的同名方法AddTimeLine覆盖了，所以父类的start方法实际调用的是子类的AddTimeLine。
+ 父类中，不希望被子类重写的成员，放到Sealed中，
+ 如果公有成员被其它成员调用，且该公有成员不在Sealed中且不希望被子类多态，则使用纯虚原则先将其写成私有方法，再其它成员调用私有方法。
+ 如：
+ Operate_Game.js Operate_Single类中的RefreshMapInfo、GameOver等公有成员。
 
-Mousedown同理。
+ 如果公有成员被其它成员调用，且该公有成员希望被子类多态（子类同名方法用this.base调用父类同名方法，父类同名方法又调用了该公有成员。
+ 该公有成员被子类覆盖了，所以父类同名方法实际上调用的是子类中与该公有成员同名的成员），则不做任何处理，其它成员直接调用该公有成员。
+ 如：
+ Operate_Game.js Operate_Single类中AddTimeLine、Mousedown等。
 
+ 子类（Operate_Boss）的start方法中通过this.base（this.base的作用是将父类的同名方法指向子类）调用父类的start方法，
+ 父类的start方法又调用了公有成员AddTimeLine。而该AddTimeLine被子类的同名方法AddTimeLine覆盖了，所以父类的start方法实际调用的是子类的AddTimeLine。
 
+ Mousedown同理。
 
 
-子类调用父类方法都用this.base()/this.baseClass.xxx.call(this, xxx)。因为这样都统一调用子类的原型链。
-如果用this.baseToParrent()/this.baseClass.xxx()，这样就是调用父类的原型链了，可能会造成子类原型和父类原型混乱的情况（如有些子类方法用this.base()
-（希望调用子类多态同名方法时），有些子类方法用this.baseToParrent()）。
 
 
+ 子类调用父类方法都用this.base()/this.baseClass.xxx.call(this, xxx)。因为这样都统一调用子类的原型链。
+ 如果用this.baseToParrent()/this.baseClass.xxx()，这样就是调用父类的原型链了，可能会造成子类原型和父类原型混乱的情况（如有些子类方法用this.base()
+ （希望调用子类多态同名方法时），有些子类方法用this.baseToParrent()）。
 
-//子类多态：子类同名方法中调用父类的同名方法（如通过this.baseToParrent()/this.baseClase.xxx/this.base等），父类的同名方法又包括了父类中的公有成员。
 
 
-2013.02.20：
-现在每次创建Class的类的实例时，原型保持不变（即时第一次创建实例后修改了原型）。
+ //子类多态：子类同名方法中调用父类的同名方法（如通过this.baseToParrent()/this.baseClase.xxx/this.base等），父类的同名方法又包括了父类中的公有成员。
 
-2013.03.31:
-//修改了extendDeep（新名字为extendDeep）。
-改用extendDeep（不再调用hasOwnProperty判断，因为调用的话，就不能备份父类原型上的成员了！）。
-增加命名空间。
 
+ 2013.02.20：
+ 现在每次创建Class的类的实例时，原型保持不变（即时第一次创建实例后修改了原型）。
 
-2013.04.02:
-“extendDeep(F.prototype.backUp_prototype, F.prototype);”顺序错了，
-应该为“extendDeep(F.prototype, F.prototype.backUp_prototype);”或“F.prototype.backUp_prototype = extendDeep(F.prototype);”。
-已修正该顺序！
+ 2013.03.31:
+ //修改了extendDeep（新名字为extendDeep）。
+ 改用extendDeep（不再调用hasOwnProperty判断，因为调用的话，就不能备份父类原型上的成员了！）。
+ 增加命名空间。
 
 
-2013.04.12:
-之前的顺序是对的。。。。。。（04.02）
-恢复了原来的顺序：“extendDeep(F.prototype.backUp_prototype, F.prototype);”
+ 2013.04.02:
+ “extendDeep(F.prototype.backUp_prototype, F.prototype);”顺序错了，
+ 应该为“extendDeep(F.prototype, F.prototype.backUp_prototype);”或“F.prototype.backUp_prototype = extendDeep(F.prototype);”。
+ 已修正该顺序！
 
 
-2013.04.14:
-AClass中也增加了backUp_prototype机制：
-现在修改抽象类的子类的实例中继承的抽象类的属性后，
-创建抽象类的实例（或者新建个空类并继承抽象类，然后创建该空类的实例）（在测试抽象类时，会需要创建抽象类的实例），
-该实例的属性会恢复为原始状态。
+ 2013.04.12:
+ 之前的顺序是对的。。。。。。（04.02）
+ 恢复了原来的顺序：“extendDeep(F.prototype.backUp_prototype, F.prototype);”
 
 
-2013.04.21:
-AClass中也能写Init构造函数了（供子类构造函数中调用）。
-在Class类的Init构造函数中，可以通过this.baseToParrent/this.base来调用父类的构造函数了（以前在Init中只能通过this.baseClass.Init来调用！）。
+ 2013.04.14:
+ AClass中也增加了backUp_prototype机制：
+ 现在修改抽象类的子类的实例中继承的抽象类的属性后，
+ 创建抽象类的实例（或者新建个空类并继承抽象类，然后创建该空类的实例）（在测试抽象类时，会需要创建抽象类的实例），
+ 该实例的属性会恢复为原始状态。
 
 
-2013.04.22:
-修复了bug。详见《YOOP记录》 -> 已解决的问题1、2。
+ 2013.04.21:
+ AClass中也能写Init构造函数了（供子类构造函数中调用）。
+ 在Class类的Init构造函数中，可以通过this.baseToParrent/this.base来调用父类的构造函数了（以前在Init中只能通过this.baseClass.Init来调用！）。
 
-2013.05.13:
-修复了bug。详见《YOOP记录》 -> 已解决的问题3、4。
-注意！多级继承时，一级子类通过baseClass调用父类原型，二级子类通过_baseClass调用一级子类原型，以此类推。
 
+ 2013.04.22:
+ 修复了bug。详见《YOOP记录》 -> 已解决的问题1、2。
 
-2013.05.31:
-将YYC.Frame.MyClass改为YYC.Class
-将YYC.Frame.MyAbstract改为YYC.AClass
-将YYC.Frame.MyInterface改为YYC.Interface
+ 2013.05.13:
+ 修复了bug。详见《YOOP记录》 -> 已解决的问题3、4。
+ 注意！多级继承时，一级子类通过baseClass调用父类原型，二级子类通过_baseClass调用一级子类原型，以此类推。
 
-将原来的base改名为baseToParrent并弃用（注释掉），将baseToSubClass改名为base 。
 
-去掉多余的注释。
+ 2013.05.31:
+ 将YYC.Frame.MyClass改为YYC.Class
+ 将YYC.Frame.MyAbstract改为YYC.AClass
+ 将YYC.Frame.MyInterface改为YYC.Interface
 
-2013.06.01
-使用面向过程的思想重构了代码结构。
+ 将原来的base改名为baseToParrent并弃用（注释掉），将baseToSubClass改名为base 。
 
-2013.06.02 - 2013.06.03
-去掉了“密封方法”、“baseToParent”。
-使用面向对象的思想重构了代码结构。
+ 去掉多余的注释。
 
+ 2013.06.01
+ 使用面向过程的思想重构了代码结构。
 
-2013.06.05
-增加YOOPSpec -> 测试"子类虚方法实现抽象父类的抽象方法时，不抛出异常"、"非抽象类定义抽象成员时抛出异常"。
+ 2013.06.02 - 2013.06.03
+ 去掉了“密封方法”、“baseToParent”。
+ 使用面向对象的思想重构了代码结构。
 
-将children改名为impletationMap。
-增加P_addToImpletationMap。
-将P_prepareAndAddProtected、P_prepareAndAddPublic、P_addVirtual中“将实现方法加入到ImpletationMap中”的职责提取出来形成P_prepareCheck方法，并将原方法改名为P_addPublicMember、P_addProtectedMember。
-将Structure -> P_check分解为P_checkImplementationOfAbstract、P_checkImplementationOfInterface。
 
-将P_addPrivate、P_addStatic改名为P_addPrivateMember、P_addStaticMember。
+ 2013.06.05
+ 增加YOOPSpec -> 测试"子类虚方法实现抽象父类的抽象方法时，不抛出异常"、"非抽象类定义抽象成员时抛出异常"。
 
-将buildClass、buildAClass中的addOuterAbstract职责提取为_addOuterAbstract方法。
-将buildClass中的备份F.prototype提取为_backUpPrototype方法。
+ 将children改名为impletationMap。
+ 增加P_addToImpletationMap。
+ 将P_prepareAndAddProtected、P_prepareAndAddPublic、P_addVirtual中“将实现方法加入到ImpletationMap中”的职责提取出来形成P_prepareCheck方法，并将原方法改名为P_addPublicMember、P_addProtectedMember。
+ 将Structure -> P_check分解为P_checkImplementationOfAbstract、P_checkImplementationOfInterface。
 
-将F中的恢复F.prototype和初始化分别提取为_restorePrototype、_init方法。
+ 将P_addPrivate、P_addStatic改名为P_addPrivateMember、P_addStaticMember。
 
-解决了“非抽象类定义抽象成员时不抛出异常”的bug：
-在Class -> P_addSpecial中判断是否有Abstract，如果有则抛出异常。
+ 将buildClass、buildAClass中的addOuterAbstract职责提取为_addOuterAbstract方法。
+ 将buildClass中的备份F.prototype提取为_backUpPrototype方法。
 
-将Structure的实例属性下移到子类中。
+ 将F中的恢复F.prototype和初始化分别提取为_restorePrototype、_init方法。
 
-修改了_addVirtualToImplementMap。
+ 解决了“非抽象类定义抽象成员时不抛出异常”的bug：
+ 在Class -> P_addSpecial中判断是否有Abstract，如果有则抛出异常。
 
-将Structure写成原型形式，而Interface、AClass、Class不写成原型形式！
+ 将Structure的实例属性下移到子类中。
 
-采用我的编程规范，将AClass、Class的私有函数前缀写成“__”(两个下划线)。
+ 修改了_addVirtualToImplementMap。
 
+ 将Structure写成原型形式，而Interface、AClass、Class不写成原型形式！
 
-2013.06.06
-重构了P_checkImplementationOfAbstract、P_checkImplementationOfInterface。
+ 采用我的编程规范，将AClass、Class的私有函数前缀写成“__”(两个下划线)。
 
-重构了AClass -> __getByParent
 
-去掉YOOP多余的注释。
+ 2013.06.06
+ 重构了P_checkImplementationOfAbstract、P_checkImplementationOfInterface。
 
-2013.06.07
+ 重构了AClass -> __getByParent
 
-YYC.AClass、YYC.Class增加“可以将虚方法定义在外面，表示公有虚方法”
+ 去掉YOOP多余的注释。
 
-YYC.AClass不验证是否实现了接口，但是可以继承接口成员（可以交给子类Class来验证）。
+ 2013.06.07
 
-YYC.Interface、YYC.AClass、YYC.Class可以继承多个接口。
+ YYC.AClass、YYC.Class增加“可以将虚方法定义在外面，表示公有虚方法”
 
-修改了buildClass、buildAClass、__getByParent传入的参数。
+ YYC.AClass不验证是否实现了接口，但是可以继承接口成员（可以交给子类Class来验证）。
 
-完善YOOPSpec测试。
+ YYC.Interface、YYC.AClass、YYC.Class可以继承多个接口。
 
-发布了YOOP v1.0
+ 修改了buildClass、buildAClass、__getByParent传入的参数。
 
-2013.06.08
+ 完善YOOPSpec测试。
 
-修复“抽象类A继承接口I但不实现，交给子类B实现。框架会检查子类是否实现了父类A的所有成员！”的bug：
-P_checkImplementationOfInterface中增加判断：如果为接口成员才进行检查实现。
+ 发布了YOOP v1.0
 
-oopFrame.js改名为YOOP.js
+ 2013.06.08
 
-2013.06.09
-删除不必要的注释。
+ 修复“抽象类A继承接口I但不实现，交给子类B实现。框架会检查子类是否实现了父类A的所有成员！”的bug：
+ P_checkImplementationOfInterface中增加判断：如果为接口成员才进行检查实现。
 
+ oopFrame.js改名为YOOP.js
 
-2013.06.30
-将严格模式下的保留字interface替换为_interface。
+ 2013.06.09
+ 删除不必要的注释。
 
-*/
 
+ 2013.06.30
+ 将严格模式下的保留字interface替换为_interface。
+
+ 2014.01.12
+ 修改了YOOPSpec.js->“解决“若父类的属性为引用类型（数组或对象）a，则如果子类的实例s1对a进行修改或者sub调用修改a的方法，则第二次创建实例s2的a为修改过后的a！"测试。
+ 现在不再通过备份和还原原型来解决该问题了，而是通过”Class的构造函数中（F）将原型深拷贝到实例中“来解决该问题
+
+
+
+ ************************************************/
 (function () {
 
     window.YYC = window.YYC || {};
@@ -204,15 +218,28 @@ oopFrame.js改名为YOOP.js
     }
 
     /*****************************************************************************************************************************/
+        //获得在原型prototype中不存在同名的str。
+        //如果有同名，则加上前缀"_"
+    function getNoRepeatStrInPrototype(prototype, str) {
+        var new_str = "";
+
+        if (!prototype[str]) {
+            return str;
+        }
+        new_str = "_" + str;
+
+        return arguments.callee(prototype, new_str);
+    }
+
 
     function extendDeep(parent, child) {
         var i = null,
-        len = 0,
-              toStr = Object.prototype.toString,
-              sArr = "[object Array]",
-              sOb = "[object Object]",
-              type = "",
-       _child = null;
+            len = 0,
+            toStr = Object.prototype.toString,
+            sArr = "[object Array]",
+            sOb = "[object Object]",
+            type = "",
+            _child = null;
 
         //数组的话，不获得Array原型上的成员。
         if (toStr.call(parent) === sArr) {
@@ -228,8 +255,8 @@ oopFrame.js改名为YOOP.js
                 }
             }
         }
-            //对象的话，要获得原型链上的成员。因为考虑以下情景：
-            //类A继承于类B，现在想要拷贝类A的实例a的成员（包括从类B继承来的成员），那么就需要获得原型链上的成员。
+        //对象的话，要获得原型链上的成员。因为考虑以下情景：
+        //类A继承于类B，现在想要拷贝类A的实例a的成员（包括从类B继承来的成员），那么就需要获得原型链上的成员。
         else if (toStr.call(parent) === sOb) {
             _child = child || {};
 
@@ -265,19 +292,18 @@ oopFrame.js改名为YOOP.js
     };
 
     /*
-        Structure写成原型形式，而Interface、AClass、Class不写成原型形式！（如写成:
-        Interface.prototype = (function(){
-            function I(){
-            };
+     Structure写成原型形式，而Interface、AClass、Class不写成原型形式！（如写成:
+     Interface.prototype = (function(){
+     function I(){
+     };
 
-            return {
-                ...
-            };
-        }());
-        ）
-        因为如果写成原型形式，则Interface/AClass/Class的实例就共享同一个I/A/F类！这样会造成不同的类之间互相干扰！
-    */
-
+     return {
+     ...
+     };
+     }());
+     ）
+     因为如果写成原型形式，则Interface/AClass/Class的实例就共享同一个I/A/F类！这样会造成不同的类之间互相干扰！
+     */
 
 
     (function () {
@@ -301,7 +327,7 @@ oopFrame.js改名为YOOP.js
                         that.method = Array.prototype.slice.call(arguments, 1);
                         that.attribute = null;
                     }
-                        //形如“Interface(Parent, ["A", "B", "GetName"], ["a", "c"]);”
+                    //形如“Interface(Parent, ["A", "B", "GetName"], ["a", "c"]);”
                     else {
                         that.method = _method;
                         that.attribute = _attribute;
@@ -314,7 +340,7 @@ oopFrame.js改名为YOOP.js
                         that.method = Array.prototype.slice.call(arguments, 0);
                         that.attribute = null;
                     }
-                        //形如“Interface(["A", "B", "GetName"], ["a", "c"]);”
+                    //形如“Interface(["A", "B", "GetName"], ["a", "c"]);”
                     else {
                         that.method = arguments[0];
                         that.attribute = arguments[1];
@@ -328,7 +354,7 @@ oopFrame.js改名为YOOP.js
             };
             function _checkInheritInterface(_parent) {
                 var i = 0,
-                      len = 0;
+                    len = 0;
 
                 for (i = 0, len = _parent.length; i < len; i++) {
                     if (getFunctionName(_parent[i]) !== "I") {
@@ -343,7 +369,7 @@ oopFrame.js改名为YOOP.js
             };
             function _inherit() {
                 var i = 0,
-                      len = 0;
+                    len = 0;
 
                 for (i = 0, len = that.parent.length; i < len; i++) {
                     extendDeep(that.parent[i].prototype, I.prototype);
@@ -488,7 +514,7 @@ oopFrame.js改名为YOOP.js
                 },
                 _checkInterfaceMethod: function (name) {
                     var implementaionMap = this.implementaionMap,
-                                          parentClassPrototype = this.parentClass ? this.parentClass.prototype : {};
+                        parentClassPrototype = this.parentClass ? this.parentClass.prototype : {};
 
                     if (this._noMethodForInterface(implementaionMap, name) && this._noMethodForInterface(parentClassPrototype, name)) {
                         throw new Error("Interface method '" + name + "' must be overwrited!");
@@ -496,7 +522,7 @@ oopFrame.js改名为YOOP.js
                 },
                 _checkInterfaceAttribute: function (name) {
                     var implementaionMap = this.implementaionMap,
-                                                   parentClassPrototype = this.parentClass ? this.parentClass.prototype : {};
+                        parentClassPrototype = this.parentClass ? this.parentClass.prototype : {};
 
                     if (this._noAttritubeForInterface(implementaionMap, name) && this._noAttritubeForInterface(parentClassPrototype, name)) {
                         throw new Error("Interface attribute '" + name + "' must be overwrited!");
@@ -541,18 +567,6 @@ oopFrame.js改名为YOOP.js
                         }
                     }
                 },
-                //获得在原型prototype中不存在同名的str。
-                //如果有同名，则加上前缀"_"
-                P_getNoRepeatStrInPrototype: function (prototype, str) {
-                    var new_str = "";
-
-                    if (!prototype[str]) {
-                        return str;
-                    }
-                    new_str = "_" + str;
-
-                    return arguments.callee(prototype, new_str);
-                },
                 P_addStaticMember: function () {
                     var Static = null,
                         k = null,
@@ -575,7 +589,7 @@ oopFrame.js改名为YOOP.js
                     // 如果父类存在，则实例对象的baseClass指向父类的原型。
                     // 这就提供了在实例对象中调用父类方法的途径。
                     //baseClass的方法是指向this.parentClass.prototype的，不是指向（子类）的！
-                    _class.prototype[this.P_getNoRepeatStrInPrototype(parentClass.prototype, "baseClass")] = parentClass.prototype;
+                    _class.prototype[getNoRepeatStrInPrototype(parentClass.prototype, "baseClass")] = parentClass.prototype;
                 },
                 P_addInit: function () {
                     var _class = this.P_class,
@@ -584,8 +598,8 @@ oopFrame.js改名为YOOP.js
 
                     if (prop.Init) {
                         if (parentClass &&
-                typeof prop.Init === "function" &&
-                typeof _class.prototype.Init === "function") {
+                            typeof prop.Init === "function" &&
+                            typeof _class.prototype.Init === "function") {
                             _class.prototype.Init = function (name) {
                                 return function () {
                                     this.base = parentClass.prototype[name];
@@ -628,8 +642,8 @@ oopFrame.js改名为YOOP.js
                 },
                 _addPublic: function (name) {
                     var parentClass = this.parentClass,
-                     prop = this.prop,
-                      P_class = this.P_class;
+                        prop = this.prop,
+                        P_class = this.P_class;
 
                     if (parentClass &&
                         typeof prop.Public[name] === "function" &&
@@ -695,7 +709,7 @@ oopFrame.js改名为YOOP.js
                     that.parentClass = null;
                     that.interface = null;
                 }
-                    //{Class: xx, Interface: xx}
+                //{Class: xx, Interface: xx}
                 else if (typeof _parent === "object") {
                     if (!_parent.Class && !_parent.Interface) {
                         throw new Error("Please add AbstractClass or Interface!");
@@ -709,7 +723,7 @@ oopFrame.js改名为YOOP.js
                     }
                     that.prop = _prop;
                 }
-                    //直接为xx抽象类
+                //直接为xx抽象类
                 else if (typeof _parent === "function") {
                     that.parentClass = _parent;
                     that.interface = null;
@@ -746,12 +760,12 @@ oopFrame.js改名为YOOP.js
                     // 如果父类存在，则实例对象的baseClass指向父类的原型。
                     // 这就提供了在实例对象中调用父类方法的途径。
                     //baseClass的方法是指向this.parentClass.prototype的，不是指向（子类）的！
-                    A.prototype[this.P_getNoRepeatStrInPrototype(parentClass.prototype, "baseClass")] = parentClass.prototype;
+                    A.prototype[getNoRepeatStrInPrototype(parentClass.prototype, "baseClass")] = parentClass.prototype;
                 }
 
                 if (this.interface) {
                     var i = 0,
-       len = 0;
+                        len = 0;
 
                     for (i = 0, len = this.interface.length; i < len; i++) {
                         extendDeep(this.interface[i].prototype, A.prototype);
@@ -818,8 +832,6 @@ oopFrame.js改名为YOOP.js
             this.P_class = F;
             //当前是否处于创建类的阶段。
             this.initializing = false;
-            //原型恢复标志，用于防止第一次创建实例时恢复原型
-            this.mark_resume = false;
 
 
             // 创建的类（构造函数）
@@ -828,13 +840,7 @@ oopFrame.js改名为YOOP.js
                     args = arguments;
 
                 function _restorePrototype() {
-                    //防止第一次创建实例时恢复原型
-                    if (that.mark_resume) {     //使用that，调用Class的实例成员
-                        extendDeep(F.backUp_prototype, F.prototype);
-                    }
-                    else {
-                        that.mark_resume = true;
-                    }
+                    extendDeep(F.prototype, self);
                 };
                 function _init() {
                     // 如果当前处于实例化类的阶段，则调用构造函数Init
@@ -847,20 +853,20 @@ oopFrame.js改名为YOOP.js
                 _init();
 
                 /*不能删除私有成员和保护成员！否则类的成员就不能调用到私有和保护的成员了（因为已经删除了）！
-                对象的创建算法参考http://www.cnblogs.com/TomXu/archive/2012/02/06/2330609.html
-            
-            
-            
-            
-                //删除私有成员和保护成员，这样外界就不能访问私有和保护成员了！
-                for (name in this) {
-                if (name.search(/(^_)|(^P_)/) !== -1) {
-                delete F.prototype[name];
-                //                                                    this[name] = null;
-                }
-                  
-                }
-                */
+                 对象的创建算法参考http://www.cnblogs.com/TomXu/archive/2012/02/06/2330609.html
+
+
+
+
+                 //删除私有成员和保护成员，这样外界就不能访问私有和保护成员了！
+                 for (name in this) {
+                 if (name.search(/(^_)|(^P_)/) !== -1) {
+                 delete F.prototype[name];
+                 //                                                    this[name] = null;
+                 }
+
+                 }
+                 */
             }
 
             function __getByParent(args) {
@@ -874,7 +880,7 @@ oopFrame.js改名为YOOP.js
                     that.parentClass = null;
                     that.interface = null;
                 }
-                    //{Class: xx, Interface: xx}
+                //{Class: xx, Interface: xx}
                 else if (typeof _parent === "object") {
                     if (!_parent.Class && !_parent.Interface) {
                         throw new Error("Please add Class or Interface!");
@@ -888,7 +894,7 @@ oopFrame.js改名为YOOP.js
                     }
                     that.prop = _prop;
                 }
-                    //直接为xx类
+                //直接为xx类
                 else if (typeof _parent === "function") {
                     that.parentClass = _parent;
                     that.interface = null;
@@ -940,8 +946,6 @@ oopFrame.js改名为YOOP.js
                 this.P_checkImplementationOfAbstract();
                 __checkEachImplementationOfInterface();
 
-                __backUpPrototype();
-
                 return F;
             };
             function __checkEachImplementationOfInterface() {
@@ -980,20 +984,17 @@ oopFrame.js改名为YOOP.js
                     that.P_addVirtualAndCheck(that.prop.Virtual);
                 }
             };
-            function __backUpPrototype() {
-                F.backUp_prototype = extendDeep(F.prototype);
-            };
         };
 
         Class.prototype = new Structure();
 
         /*
-        下面的写法有问题！因为只有载入YOOP.js时，创建了AClass的实例。
-        调用YYC.AClass时，只是引用该实例的buildAClass，而不会再创建AClass实例。
-        也就是说，所有YYC.AClass都共用一个AClass的实例！共用AClass实例的属性（如parent等）！
+         下面的写法有问题！因为只有载入YOOP.js时，创建了AClass的实例。
+         调用YYC.AClass时，只是引用该实例的buildAClass，而不会再创建AClass实例。
+         也就是说，所有YYC.AClass都共用一个AClass的实例！共用AClass实例的属性（如parent等）！
 
-        YYC.AClass = new AClass().buildAClass;
-        */
+         YYC.AClass = new AClass().buildAClass;
+         */
 
 
         YYC.AClass = function () {
