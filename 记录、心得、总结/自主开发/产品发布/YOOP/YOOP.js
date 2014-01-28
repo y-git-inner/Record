@@ -144,7 +144,7 @@
  将buildClass、buildAClass中的addOuterAbstract职责提取为_addOuterAbstract方法。
  将buildClass中的备份F.prototype提取为_backUpPrototype方法。
 
- 将F中的恢复F.prototype和初始化分别提取为_restorePrototype、_init方法。
+ 将F中的恢复F.prototype和初始化分别提取为_copyPrototypeToInstance、_init方法。
 
  解决了“非抽象类定义抽象成员时不抛出异常”的bug：
  在Class -> P_addSpecial中判断是否有Abstract，如果有则抛出异常。
@@ -197,6 +197,9 @@
  修改了YOOPSpec.js->“解决“若父类的属性为引用类型（数组或对象）a，则如果子类的实例s1对a进行修改或者sub调用修改a的方法，则第二次创建实例s2的a为修改过后的a！"测试。
  现在不再通过备份和还原原型来解决该问题了，而是通过”Class的构造函数中（F）将原型深拷贝到实例中“来解决该问题
 
+ 
+ 2014.01.17
+ _restorePrototype重命名为_copyPrototypeToInstance
 
 
  ************************************************/
@@ -839,7 +842,7 @@
                 var self = this,
                     args = arguments;
 
-                function _restorePrototype() {
+                function _copyPrototypeToInstance() {
                     extendDeep(F.prototype, self);
                 };
                 function _init() {
@@ -849,7 +852,7 @@
                     }
                 };
 
-                _restorePrototype();
+                _copyPrototypeToInstance();
                 _init();
 
                 /*不能删除私有成员和保护成员！否则类的成员就不能调用到私有和保护的成员了（因为已经删除了）！
